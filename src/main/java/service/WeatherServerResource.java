@@ -16,12 +16,14 @@ import net.aksingh.owmjapis.model.HourlyWeatherForecast;
 @Path("/")
 public class WeatherServerResource implements WeatherServerInterface {
 	
-	final private String apiKey = "785d7d7d943ffc783b0e903610246440";
-	private OWM openWeatherMap;
+	final private static String apiKey = "785d7d7d943ffc783b0e903610246440";
+	private static OWM openWeatherMap;
 	
 	public WeatherServerResource() {
-		openWeatherMap = new OWM(apiKey);
-		System.out.println("Weather resource object constructed!");
+		if (openWeatherMap == null) {
+			openWeatherMap = new OWM(apiKey);
+			System.out.println("Weather resource object constructed!");
+		}
 	}
 	
 	@GET
@@ -34,16 +36,16 @@ public class WeatherServerResource implements WeatherServerInterface {
 	@Path("/currentInfo")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getCurrentWeatherInfo(@QueryParam("cityName") String cityName) throws APIException {
-		System.out.println("Procedure getCurrentWeatherInfo called.");
+		System.out.println("getCurrentWeatherInfo() called.");
 		CurrentWeather cwData = openWeatherMap.currentWeatherByCityName(cityName);
-		return new WeatherInfo(cwData).toString();
+		return new WeatherInfo(cwData).toJson();
 	}
 	
 	@GET
 	@Path("/futureInfo")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getFutureWeatherInfo(@QueryParam("cityName") String cityName, @QueryParam("hours") int numHours) throws APIException {
-		System.out.println("Procedure getFutureWeatherInfo called.");
+		System.out.println("getFutureWeatherInfo() called.");
 		if (numHours < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -58,7 +60,7 @@ public class WeatherServerResource implements WeatherServerInterface {
 		if (threeHourIntervalIndex >= hwData.getDataCount()) {
 			throw new IllegalArgumentException("Number of hours exceeds maximum of 5 days forecast");
 		}
-		return new WeatherInfo(hwData, threeHourIntervalIndex).toString();
+		return new WeatherInfo(hwData, threeHourIntervalIndex).toJson();
 	}
 
 }

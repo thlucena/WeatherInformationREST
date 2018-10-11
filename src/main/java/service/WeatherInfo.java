@@ -1,6 +1,13 @@
 package service;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Date;
+import java.util.Locale;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import net.aksingh.owmjapis.model.CurrentWeather;
 import net.aksingh.owmjapis.model.HourlyWeatherForecast;
@@ -15,7 +22,6 @@ public class WeatherInfo {
 	public WeatherInfo(CurrentWeather data) {
 		this.initializeWeather(data.getMainData(), data.getWeatherList().get(0),
 				data.getWindData(), data.getCloudData());
-		
 		
 		this.city =  data.getCityName();
 		this.country = data.getSystemData().getCountryCode();
@@ -70,33 +76,27 @@ public class WeatherInfo {
 	
 	@Override
 	public String toString() {
-//		DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locale.getDefault());
-//		formatSymbols.setDecimalSeparator('.');
-//		DecimalFormat df = new DecimalFormat("#.##", formatSymbols);
-//		df.setRoundingMode(RoundingMode.CEILING);
-//		
-//		String info = "";
-//		info += "Weather data from " + city + ", " + country +
-//				" (" + cityLat + ", " + cityLon + ") on " + this.dateTime + "\n";
-//		info += weatherCondition + " - " + weatherDescription + "\n";
-//		info += "Temperature: " + df.format(temp.getCelsius()) +
-//				" ºC (" + df.format(tempMin.getCelsius()) + " ºC min / " +
-//				df.format(tempMax.getCelsius()) + " ºC max)\n";
-//		info += "Pressure: " + pressure + " hPa\n";
-//		info += "Humidity: " + humidity + "%\n";
-//		info += "Wind: " + windSpeed + " km/h - " + windDeg + "º\n";
-//		info += "Cloudiness: " + cloudiness + "%\n\n";
+		DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locale.getDefault());
+		formatSymbols.setDecimalSeparator('.');
+		DecimalFormat df = new DecimalFormat("#.##", formatSymbols);
+		df.setRoundingMode(RoundingMode.CEILING);
+		
 		String info = "";
 		info += "Weather data from " + city + ", " + country +
 				" (" + cityLat + ", " + cityLon + ") on " + this.dateTime + "\n";
 		info += weatherCondition + " - " + weatherDescription + "\n";
-		info += "Temperature: " + temp.getCelsius() +
-				" ºC (" + tempMin.getCelsius() + " ºC min / " +
-				tempMax.getCelsius() + " ºC max)\n";
+		info += "Temperature: " + df.format(temp.getCelsius()) +
+				" ºC (" + df.format(tempMin.getCelsius()) + " ºC min / " +
+				df.format(tempMax.getCelsius()) + " ºC max)\n";
 		info += "Pressure: " + pressure + " hPa\n";
 		info += "Humidity: " + humidity + "%\n";
 		info += "Wind: " + windSpeed + " km/h - " + windDeg + "º\n";
 		info += "Cloudiness: " + cloudiness + "%\n\n";
 		return info;
+	}
+	
+	public String toJson() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		return gson.toJson(this);
 	}
 }
