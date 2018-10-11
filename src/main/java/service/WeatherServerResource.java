@@ -34,7 +34,7 @@ public class WeatherServerResource implements WeatherServerInterface {
 	
 	@GET
 	@Path("/currentInfo")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String getCurrentWeatherInfo(@QueryParam("cityName") String cityName) throws APIException {
 		System.out.println("getCurrentWeatherInfo() called.");
 		CurrentWeather cwData = openWeatherMap.currentWeatherByCityName(cityName);
@@ -43,7 +43,7 @@ public class WeatherServerResource implements WeatherServerInterface {
 	
 	@GET
 	@Path("/futureInfo")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String getFutureWeatherInfo(@QueryParam("cityName") String cityName, @QueryParam("hours") int numHours) throws APIException {
 		System.out.println("getFutureWeatherInfo() called.");
 		if (numHours < 0) {
