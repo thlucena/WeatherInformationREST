@@ -2,9 +2,13 @@ package service;
 
 public class Temperature {
 Double kelvin;
+Double celsius;
+Double fahrenheit;
 	
 	Temperature() {
 		this.kelvin = null;
+		this.celsius = null;
+		this.fahrenheit = null;
 	}
 	
 	Temperature(double k) {
@@ -14,10 +18,12 @@ Double kelvin;
 		}
 		
 		this.kelvin = k;
+		this.celsius = Temperature.kelvinToCelsius(this.kelvin);
+		this.fahrenheit = Temperature.kelvinToFahrenheit(this.kelvin);
 	}
 	
 	double getCelsius() {
-		return Temperature.kelvinToCelsius(this.kelvin);
+		return this.celsius;
 	}
 	
 	double getKelvin() {
@@ -25,7 +31,7 @@ Double kelvin;
 	}
 	
 	double getFahrenheit() {
-		return Temperature.kelvinToFahrenheit(this.kelvin);
+		return this.fahrenheit;
 	}
 	
 	
